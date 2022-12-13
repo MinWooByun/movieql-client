@@ -1,5 +1,9 @@
 const Home = () => {
-  return <h1>movieql client</h1>;
+  return (
+    <div>
+      <h1>This is a list of movies</h1>
+    </div>
+  );
 };
 
 export default Home;
