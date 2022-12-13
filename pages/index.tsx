@@ -1,32 +1,31 @@
-import { gql, useApolloClient } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { gql, useQuery } from "@apollo/client";
+
+const ALL_MOVIES = gql`
+  query getMovies {
+    allMovies {
+      id
+      title
+    }
+  }
+`;
 
 const Home = () => {
-  const [movies, setMovies] = useState<any>([]);
-  const client = useApolloClient();
+  const { data, loading, error } = useQuery(ALL_MOVIES);
 
-  useEffect(() => {
-    client
-      .query({
-        query: gql`
-          {
-            allMovies {
-              id
-              title
-            }
-          }
-        `,
-      })
-      .then((results) => setMovies(results.data.allMovies));
-  }, [client]);
-
+  if (loading) {
+    return <h1>Loading...😜</h1>;
+  }
+  if (error) {
+    return <h1>Could not fetch...😢</h1>;
+  }
   return (
     <div>
-      <h1>
-        {movies.map((movie: any) => {
-          return <ul key={movie.id}>{movie.title}</ul>;
+      <h1>Movies</h1>
+      <ul>
+        {data.allMovies.map((movie: any) => {
+          return <li key={movie.id}>{movie.title}</li>;
         })}
-      </h1>
+      </ul>
     </div>
   );
 };
