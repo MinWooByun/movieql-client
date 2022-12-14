@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
 
 const GET_MOVIE = gql`
@@ -6,6 +7,8 @@ const GET_MOVIE = gql`
     movie(id: $movieId) {
       id
       title
+      medium_cover_image
+      rating
     }
   }
 `;
@@ -23,12 +26,29 @@ const Movie = () => {
   });
 
   if (loading) {
-    return <h1>Loading...😜</h1>;
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundImage: "linear-gradient(-45deg, #d754ab, #fd723a)",
+        }}
+      >
+        <h1 style={{ fontSize: "50px", fontWeight: "bold" }}>Loading...😜</h1>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>{data.movie.title}</h1>
+    <div className="Container">
+      <div className="Column">
+        <h1 className="Title">{loading ? "Loading..." : `${data.movie?.title}`}</h1>
+        <span className="Subtitle">⭐️ {data?.movie?.rating}</span>
+      </div>
+      <Image src={data.movie.medium_cover_image} alt={"image"} width={400} height={550} className="Image" />
     </div>
   );
 };
