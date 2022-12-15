@@ -1,5 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 const GET_MOVIE = gql`
@@ -67,6 +70,22 @@ const Movie = () => {
 
   return (
     <div className="Container">
+      <Link href={"/"}>
+        <button
+          style={{
+            border: "none",
+            padding: "10px 20px",
+            backgroundColor: "white",
+            fontSize: "18px",
+            fontWeight: "bold",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginLeft: "20px",
+          }}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+      </Link>
       <div className="Column">
         <h1 className="Title">{loading ? "Loading..." : `${data.movie?.title}`}</h1>
         <h1 className="Subtitle">⭐️ {data?.movie?.rating}</h1>
