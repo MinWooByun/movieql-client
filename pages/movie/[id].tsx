@@ -17,7 +17,11 @@ const GET_MOVIE = gql`
 const Movie = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data, loading } = useQuery(GET_MOVIE, {
+  const {
+    data,
+    loading,
+    client: { cache },
+  } = useQuery(GET_MOVIE, {
     // 이 부분은 client에서 server로 변수를 보내는 부분이다.
     // 변수를 필요로 하는 쿼리로 변수를 보내는 방법이다.
     variables: {
@@ -43,6 +47,24 @@ const Movie = () => {
     );
   }
 
+  // apollo cache에 저장하는 방법
+  const onClick = () => {
+    cache.writeFragment({
+      id: `Movie:${id}`,
+      fragment: gql`
+        # fragment(필수) MovieFragment(짓고 싶은 이름 아무거나) on(필수) Moive(수정해주고 싶은 타입(필수)) {}
+        fragment MovieFragment on Movie {
+          # 변경하고 싶은 오브젝트들을 넣어준다.
+          isLiked
+        }
+      `,
+      // 변경할 값을 넣어준다.
+      data: {
+        isLiked: !data.movie.isLiked,
+      },
+    });
+  };
+
   return (
     <div className="Container">
       <div className="Column">
@@ -59,6 +81,7 @@ const Movie = () => {
             fontWeight: "bold",
             cursor: "pointer",
           }}
+          onClick={onClick}
         >
           {data?.movie?.isLiked ? "Unlike" : "Like"}
         </button>
